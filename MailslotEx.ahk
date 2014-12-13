@@ -31,7 +31,7 @@ class MailslotEx extends Mailslot
 			this.__Ptr    := addr + 0
 			this.Pos      := addr + 0
 			this.Size     := read + 0
-			this.Encoding := RTrim(encoding, "-RAW") ;// StrGet doesn't seem to recognize the 'RAW' suffix
+			this.Encoding := RTrim(encoding, "-RAWraw") ;// StrGet doesn't seem to recognize the 'RAW' suffix
 		}
 
 		__Get(key:="", args*)
@@ -43,7 +43,7 @@ class MailslotEx extends Mailslot
 		__Call(method, args*)
 		{
 			if (method ~= "i)^Read(U?(Int|Short|Char|Ptr)|Int64|Double|Float)$")
-				return this.ReadNum(LTrim(method, "Read"))
+				return this.ReadNum(SubStr(method, 5))
 		}
 
 		Read(chars:=-1)
@@ -94,7 +94,7 @@ class MailslotEx extends Mailslot
 		{
 			static sizeof := { "Char": 1, "Short": 2, "Int": 4, "Int64": 8
 			                 , "Float":  4, "Double": 8, "Ptr": A_PtrSize }
-			ptr := this.Pos, this.Seek(sizeof[ LTrim(NumType, "U") ], 1)
+			ptr := this.Pos, this.Seek(sizeof[ LTrim(NumType, "Uu") ], 1)
 			return NumGet(ptr + 0, NumType)
 		}
 	}

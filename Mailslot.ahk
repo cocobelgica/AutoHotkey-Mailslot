@@ -7,7 +7,7 @@ class Mailslot
 		
 		options := Trim(options, " `t`r`n")
 		if (options ~= "^[Rr]\d*?$")
-			return new this.base.Server(name, LTrim(options, "r"), SubStr(options, 1, 1) == "R")
+			return new this.base.Server(name, LTrim(options, "Rr"), SubStr(options, 1, 1) == "R")
 		else if (options ~= "i)^w(\.|\*|[^\r\n]+)?$")
 			return new this.base.Client(name, SubStr(options, 2))
 		else
@@ -40,7 +40,7 @@ class Mailslot
 		{
 			if read := this.FRead(buf, this._GetInfo("Size"), wait)
 			{
-				enc := RTrim(encoding, "-RAW")
+				enc := RTrim(encoding, "-RAWraw")
 				length := read // ((enc = "UTF-16" || enc = "CP1200") ? 2 : 1)
 				return StrGet(&buf, length, enc)
 			}
@@ -52,7 +52,7 @@ class Mailslot
 			VarSetCapacity(tmp_buf, size := this._GetInfo("Size"))
 			if (wait != this.Timeout)
 				this.Timeout := wait
-			if res := DllCall("ReadFile", "Ptr", hSlot, "Ptr", &tmp_buf, "UInt", size, "UIntP", read := 0, "Ptr", 0)
+			if DllCall("ReadFile", "Ptr", hSlot, "Ptr", &tmp_buf, "UInt", size, "UIntP", read := 0, "Ptr", 0)
 			{
 				if (bytes < 0 || bytes > read)
 					bytes := read
